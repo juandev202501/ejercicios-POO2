@@ -5,29 +5,34 @@
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author JUAN DAVID
  */
 public class NotaDiplomatica {
+
     private String idNota;
-    private LocalDateTime fechaEmision;
+    private String fechaEmision;
     private String contenidoOficial;
     private String nombreEmisor;
-    private String acriditacionEmisor;
+    private String acreditacionEmisor;
     private boolean estadoRadicacion;
+    private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
 
     public NotaDiplomatica() {
+        this.estadoRadicacion = false;
+        this.fechaEmision = LocalDateTime.now().format(formato);
     }
 
-    public NotaDiplomatica(String idNota, LocalDateTime fechaEmision, String contenidoOficial, String nombreEmisor, String acriditacionEmisor, boolean estadoRadicacion) {
+    public NotaDiplomatica(String idNota, String contenidoOficial, String nombreEmisor, String acreditacionEmisor) {
         this.idNota = idNota;
-        this.fechaEmision = fechaEmision;
         this.contenidoOficial = contenidoOficial;
         this.nombreEmisor = nombreEmisor;
-        this.acriditacionEmisor = acriditacionEmisor;
-        this.estadoRadicacion = estadoRadicacion;
+        this.acreditacionEmisor = acreditacionEmisor;
+        this.fechaEmision = LocalDateTime.now().format(formato);
+        this.estadoRadicacion = false;
     }
 
     public String getIdNota() {
@@ -38,11 +43,11 @@ public class NotaDiplomatica {
         this.idNota = idNota;
     }
 
-    public LocalDateTime getFechaEmision() {
+    public String getFechaEmision() {
         return fechaEmision;
     }
 
-    public void setFechaEmision(LocalDateTime fechaEmision) {
+    public void setFechaEmision(String fechaEmision) {
         this.fechaEmision = fechaEmision;
     }
 
@@ -62,12 +67,12 @@ public class NotaDiplomatica {
         this.nombreEmisor = nombreEmisor;
     }
 
-    public String getAcriditacionEmisor() {
-        return acriditacionEmisor;
+    public String getAcreditacionEmisor() {
+        return acreditacionEmisor;
     }
 
-    public void setAcriditacionEmisor(String acriditacionEmisor) {
-        this.acriditacionEmisor = acriditacionEmisor;
+    public void setAcreditacionEmisor(String acreditacionEmisor) {
+        this.acreditacionEmisor = acreditacionEmisor;
     }
 
     public boolean isEstadoRadicacion() {
@@ -77,5 +82,5 @@ public class NotaDiplomatica {
     public void setEstadoRadicacion(boolean estadoRadicacion) {
         this.estadoRadicacion = estadoRadicacion;
     }
-    
+
 }

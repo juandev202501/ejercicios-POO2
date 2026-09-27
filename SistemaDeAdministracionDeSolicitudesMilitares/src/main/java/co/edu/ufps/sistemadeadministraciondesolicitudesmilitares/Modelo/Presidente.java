@@ -4,25 +4,23 @@
  */
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
+
 /**
  *
  * @author JUAN DAVID
  */
-public class Presidente extends Persona{
+public class Presidente extends Persona {
+
     private String despacho;
-    private boolean solicitoConceptoPrevio;
-    private boolean autorizacionSenadoRecibida;
-    private String inicioYFinDelMandato;
+    private String periodoMandato;
 
     public Presidente() {
     }
 
-    public Presidente(String despacho, boolean solicitoConceptoPrevio, boolean autorizacionSenadoRecibida, String inicioYFinDelMandato, String nombre, String nuip) {
+    public Presidente(String despacho, String periodoMandato, String nombre, String nuip) {
         super(nombre, nuip);
         this.despacho = despacho;
-        this.solicitoConceptoPrevio = solicitoConceptoPrevio;
-        this.autorizacionSenadoRecibida = autorizacionSenadoRecibida;
-        this.inicioYFinDelMandato = inicioYFinDelMandato;
+        this.periodoMandato = periodoMandato;
     }
 
     public String getDespacho() {
@@ -33,52 +31,15 @@ public class Presidente extends Persona{
         this.despacho = despacho;
     }
 
-    public boolean isSolicitoConceptoPrevio() {
-        return solicitoConceptoPrevio;
+    public String getPeriodoMandato() {
+        return periodoMandato;
     }
 
-    public void setSolicitoConceptoPrevio(boolean solicitoConceptoPrevio) {
-        this.solicitoConceptoPrevio = solicitoConceptoPrevio;
+    public void setPeriodoMandato(String periodoMandato) {
+        this.periodoMandato = periodoMandato;
     }
 
-    public boolean isAutorizacionSenadoRecibida() {
-        return autorizacionSenadoRecibida;
+    public DecretoPresidencial expedirDecreto(String numeracionOficial, int tiempoVigenciaDias, Expediente expediente) {
+        return new DecretoPresidencial(numeracionOficial, tiempoVigenciaDias, expediente);
     }
-
-    public void setAutorizacionSenadoRecibida(boolean autorizacionSenadoRecibida) {
-        this.autorizacionSenadoRecibida = autorizacionSenadoRecibida;
-    }
-
-    public String getInicioYFinDelMandato() {
-        return inicioYFinDelMandato;
-    }
-
-    public void setInicioYFinDelMandato(String inicioYFinDelMandato) {
-        this.inicioYFinDelMandato = inicioYFinDelMandato;
-    }
-    
-    public String radicarEnSenado(Expediente expediente) {
-        if (expediente != null && expediente.isDocumentacionCompleta()) {
-            return "El expediente " + expediente.getIdEspediente() + " fue radicado en el Senado.";
-        }
-        return "Error: Expediente incompleto.";
-    }
-
-    public DecretoPresidencial expedirDecreto(Expediente expediente, boolean avalSenado) {
-        if (expediente != null && avalSenado) {
-            DecretoPresidencial nuevoDecreto = new DecretoPresidencial("DEC-AUTO-" + java.time.LocalDateTime.now().getYear());
-            nuevoDecreto.setFechaExpedicion(java.time.LocalDateTime.now());
-            nuevoDecreto.setTiempoVigenciaDias(90); 
-            return nuevoDecreto; 
-        }
-        return null; 
-    }
-
-    public String firmarDecreto(DecretoPresidencial decreto) {
-        if (decreto != null) {
-            return "Decreto " + decreto.getNumeracionOficial() + " firmado. Tránsito autorizado.";
-        }
-        return "Trámite detenido: No hay decreto válido.";
-    }
-    
 }

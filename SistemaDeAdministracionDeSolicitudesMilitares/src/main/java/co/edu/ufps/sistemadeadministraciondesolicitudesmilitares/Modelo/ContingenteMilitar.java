@@ -13,30 +13,21 @@ import java.util.ArrayList;
 public class ContingenteMilitar {
 
     private String idContingente;
-    private String paisOrigen;
-    private int numeroEfectivo;
-    private String tipoTropas;
-    private boolean ingresoAutorizado;
-    private ArrayList<Militar> tropas;
+    private int cantidadEfectivos;
+    private PaisSolicitante paisOrigen;
+    private ArrayList<Militar> efectivos;
+    private DecretoPresidencial decretoRespaldo;
 
     public ContingenteMilitar() {
+        this.efectivos = new ArrayList<>();
     }
 
-    public ContingenteMilitar(String idContingente, String paisOrigen, int numeroEfectivo, String tipoTropas, boolean ingresoAutorizado) {
+    public ContingenteMilitar(String idContingente, int cantidadEfectivos, PaisSolicitante paisOrigen,  DecretoPresidencial decretoRespaldo) {
         this.idContingente = idContingente;
+        this.cantidadEfectivos = cantidadEfectivos;
         this.paisOrigen = paisOrigen;
-        this.numeroEfectivo = numeroEfectivo;
-        this.tipoTropas = tipoTropas;
-        this.ingresoAutorizado = ingresoAutorizado;
-        this.tropas = new ArrayList<>();
-    }
-
-    public ArrayList<Militar> getTropas() {
-        return tropas;
-    }
-
-    public void setTropas(ArrayList<Militar> tropas) {
-        this.tropas = tropas;
+        this.decretoRespaldo= decretoRespaldo;
+        this.efectivos = new ArrayList<>();
     }
 
     public String getIdContingente() {
@@ -47,43 +38,54 @@ public class ContingenteMilitar {
         this.idContingente = idContingente;
     }
 
-    public String getPaisOrigen() {
+    public int getCantidadEfectivos() {
+        return cantidadEfectivos;
+    }
+
+    public void setCantidadEfectivos(int cantidadEfectivos) {
+        this.cantidadEfectivos = cantidadEfectivos;
+    }
+
+    public PaisSolicitante getPaisOrigen() {
         return paisOrigen;
     }
 
-    public void setPaisOrigen(String paisOrigen) {
+    public void setPaisOrigen(PaisSolicitante paisOrigen) {
         this.paisOrigen = paisOrigen;
     }
 
-    public int getNumeroEfectivo() {
-        return numeroEfectivo;
+    public ArrayList<Militar> getEfectivos() {
+        return efectivos;
     }
 
-    public void setNumeroEfectivo(int numeroEfectivo) {
-        this.numeroEfectivo = numeroEfectivo;
+    public void setEfectivos(ArrayList<Militar> efectivos) {
+        this.efectivos = efectivos;
     }
 
-    public String getTipoTropas() {
-        return tipoTropas;
+    public DecretoPresidencial getDecretoRespaldo() {
+        return decretoRespaldo;
     }
 
-    public void setTipoTropas(String tipoTropas) {
-        this.tipoTropas = tipoTropas;
+    public void setDecretoRespaldo(DecretoPresidencial decretoRespaldo) {
+        this.decretoRespaldo = decretoRespaldo;
     }
+    
 
-    public boolean isIngresoAutorizado() {
-        return ingresoAutorizado;
-    }
-
-    public void setIngresoAutorizado(boolean ingresoAutorizado) {
-        this.ingresoAutorizado = ingresoAutorizado;
-    }
-
-    public String agregarMilitar(Militar nuevoSoldado) {
-        if (nuevoSoldado != null) {
-            this.tropas.add(nuevoSoldado);
-            return "Militar con NUIP " + nuevoSoldado.getNuip() + " asignado al contingente " + this.idContingente;
+    public String registrarMilitar(Militar militar) {
+        if (this.duplicado(militar) != null) {
+            return "ERROR: EL MILITAR CON NUIP " + militar.getNuip() + " YA ESTA REGISTRADO EN ESTE CONTINGENTE.";
         }
-        return "Error: Militar inválido.";
+
+        this.efectivos.add(militar);
+        return "MILITAR REGISTRADO CORRECTAMENTE EN EL CONTINGENTE " + this.idContingente;
+    }
+
+    public Militar duplicado(Militar nuevo) {
+        for (Militar militar : this.efectivos) {
+            if (militar.getNuip().equalsIgnoreCase(nuevo.getNuip())) {
+                return militar;
+            }
+        }
+        return null;
     }
 }

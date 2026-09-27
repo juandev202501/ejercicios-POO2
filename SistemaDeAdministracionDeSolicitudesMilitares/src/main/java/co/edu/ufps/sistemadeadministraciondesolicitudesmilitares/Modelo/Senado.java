@@ -11,29 +11,21 @@ import java.util.ArrayList;
  * @author JUAN DAVID
  */
 public class Senado {
+
     private int totalSenadores;
-    private String presidentePonencia;
-    private boolean ponenciaAprobada;
-    private ArrayList<VotacionSenado>votaciones;
+    private String mesaDirectiva;
+    private ArrayList<VotacionSenado> historialVotaciones;
 
     public Senado() {
+        this.totalSenadores = 108;
+        this.historialVotaciones = new ArrayList<>();
     }
 
-    public Senado(int totalSenadores, String presidentePonencia, boolean ponenciaAprobada) {
+    public Senado(int totalSenadores, String mesaDirectiva) {
         this.totalSenadores = totalSenadores;
-        this.presidentePonencia = presidentePonencia;
-        this.ponenciaAprobada = ponenciaAprobada;
-        this.votaciones=new ArrayList<>();
+        this.mesaDirectiva = mesaDirectiva;
+        this.historialVotaciones = new ArrayList<>();
     }
-
-    public ArrayList<VotacionSenado> getVotaciones() {
-        return votaciones;
-    }
-
-    public void setVotaciones(ArrayList<VotacionSenado> votaciones) {
-        this.votaciones = votaciones;
-    }
-    
 
     public int getTotalSenadores() {
         return totalSenadores;
@@ -43,34 +35,32 @@ public class Senado {
         this.totalSenadores = totalSenadores;
     }
 
-    public String getPresidentePonencia() {
-        return presidentePonencia;
+    public String getMesaDirectiva() {
+        return mesaDirectiva;
     }
 
-    public void setPresidentePonencia(String presidentePonencia) {
-        this.presidentePonencia = presidentePonencia;
+    public void setMesaDirectiva(String mesaDirectiva) {
+        this.mesaDirectiva = mesaDirectiva;
     }
 
-    public boolean isPonenciaAprobada() {
-        return ponenciaAprobada;
+    public ArrayList<VotacionSenado> getHistorialVotaciones() {
+        return historialVotaciones;
     }
 
-    public void setPonenciaAprobada(boolean ponenciaAprobada) {
-        this.ponenciaAprobada = ponenciaAprobada;
+    public void setHistorialVotaciones(ArrayList<VotacionSenado> historialVotaciones) {
+        this.historialVotaciones = historialVotaciones;
     }
-    
-    public String estudiarSolicitud(Expediente exp) {
-        if(exp != null && exp.isDocumentacionCompleta()){
-            return "El Senado inicia estudio del expediente.";
+    public String someterAVotacionExpediente(Expediente expediente, int aFavor, int enContra, int abstencion) {
+        VotacionSenado votacion = new VotacionSenado(aFavor, enContra, abstencion, this.totalSenadores);
+        this.historialVotaciones.add(votacion);
+        
+        if (votacion.isAprobadoParaPlenaria()) {
+            expediente.setEstadoActual(EstadoExpediente.AVALADO);
+            return "EL SENADO A  APROBADO EL EXPEDIENTE " + expediente.getIdExpediente() + " ESTADO ACTUALIZADO A AVALADO";
+        } else {
+            expediente.setEstadoActual(EstadoExpediente.ARCHIVADO);
+            return "EL SENADO HA RECHAZADO O NO CUMPLIO QUORUM PARA EL EXPEDIENTE " + expediente.getIdExpediente() + " ESTADO ACTUALIZADO A ARCHIVADO";
         }
-        return "Expediente inválido para estudio.";
     }
 
-    public String ejecutarVotacion(VotacionSenado acta) {
-        if(acta != null) {
-            this.votaciones.add(acta);
-            return "Acta de votación registrada en el Senado.";
-        }
-        return "Error al registrar votación.";
-    }
 }

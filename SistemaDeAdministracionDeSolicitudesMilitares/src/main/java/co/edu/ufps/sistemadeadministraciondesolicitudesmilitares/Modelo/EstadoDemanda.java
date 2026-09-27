@@ -8,6 +8,6 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  *
  * @author JUAN DAVID
  */
-public enum EspecialidadCuerpo {
-    ARMAS, LOGISTICA, ADMINISTRATIVO, JUSTICIA_PENAL_MILITAR
+public enum EstadoDemanda {
+    RADICADA, ADMITIDA, INADMITIDA, ESTIMADA, DESESTIMADA
 }

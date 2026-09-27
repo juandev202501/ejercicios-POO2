@@ -5,6 +5,7 @@
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -13,44 +14,44 @@ import java.util.ArrayList;
  */
 public class Expediente {
 
-    private String idEspediente;
-    private LocalDateTime fechaCreacion;
+    private String idExpediente;
+    private String fechaCreacion;
     private EstadoExpediente estadoActual;
     private boolean documentacionCompleta;
+    private PaisSolicitante paisOrigen;
     private ArrayList<SolicitudDeMision> solicitudes;
 
+    private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
+
     public Expediente() {
-    }
-
-    public Expediente(String idEspediente, LocalDateTime fechaCreacion, EstadoExpediente estadoActual, boolean documentacionCompleta) {
-        this.idEspediente = idEspediente;
-        this.fechaCreacion = fechaCreacion;
-        this.estadoActual = estadoActual;
-        this.documentacionCompleta = documentacionCompleta;
         this.solicitudes = new ArrayList<>();
+        this.fechaCreacion = LocalDateTime.now().format(formato);
+        this.estadoActual = EstadoExpediente.RADICADO;
+        this.documentacionCompleta = false;
     }
 
-    public ArrayList<SolicitudDeMision> getSolicitudes() {
-        return solicitudes;
+    public Expediente(String idExpediente, PaisSolicitante paisOrigen) {
+        this.idExpediente = idExpediente;
+        this.paisOrigen = paisOrigen;
+        this.solicitudes = new ArrayList<>();
+        this.fechaCreacion = LocalDateTime.now().format(formato);
+        this.estadoActual = EstadoExpediente.RADICADO;
+        this.documentacionCompleta = false;
     }
 
-    public void setSolicitudes(ArrayList<SolicitudDeMision> solicitudes) {
-        this.solicitudes = solicitudes;
+    public String getIdExpediente() {
+        return idExpediente;
     }
 
-    public String getIdEspediente() {
-        return idEspediente;
+    public void setIdExpediente(String idExpediente) {
+        this.idExpediente = idExpediente;
     }
 
-    public void setIdEspediente(String idEspediente) {
-        this.idEspediente = idEspediente;
-    }
-
-    public LocalDateTime getFechaCreacion() {
+    public String getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+    public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
@@ -70,10 +71,40 @@ public class Expediente {
         this.documentacionCompleta = documentacionCompleta;
     }
 
-    public String crearYAnexarSolicitud(String idSolicitud, NivelUrgencia urgencia, String objetivo, LocalDateTime fechaInicio, LocalDateTime fechaFinal, boolean cumpleRequisitos) {
-        SolicitudDeMision nuevaSolicitud = new SolicitudDeMision(idSolicitud, urgencia, objetivo, fechaInicio, fechaFinal, cumpleRequisitos);
-        this.solicitudes.add(nuevaSolicitud);
-        this.documentacionCompleta = true;
-        return "Solicitud " + idSolicitud + " creada y anexada correctamente al expediente " + this.idEspediente + ".";
+    public PaisSolicitante getPaisOrigen() {
+        return paisOrigen;
     }
+
+    public void setPaisOrigen(PaisSolicitante paisOrigen) {
+        this.paisOrigen = paisOrigen;
+    }
+
+    public ArrayList<SolicitudDeMision> getSolicitudes() {
+        return solicitudes;
+    }
+
+    public void setSolicitudes(ArrayList<SolicitudDeMision> solicitudes) {
+        this.solicitudes = solicitudes;
+    }
+
+    public String anexarSolicitud(SolicitudDeMision solicitud) {
+
+        if (this.duplicado(solicitud) != null) {
+            return "Error: YA EXISTE UNA SOLICITUD CON CODIGO " + solicitud.getIdSolicitud() + " EN ESTE EXPEDIENTE";
+        }
+
+        this.solicitudes.add(solicitud);
+        this.documentacionCompleta = true;
+        return "SOLICITUD " + solicitud.getIdSolicitud() + " ANEXADA CON EXITO AL EXPEDIENTE " + this.idExpediente;
+    }
+
+    public SolicitudDeMision duplicado(SolicitudDeMision nueva) {
+        for (SolicitudDeMision existente : this.solicitudes) {
+            if (existente.getIdSolicitud().equalsIgnoreCase(nueva.getIdSolicitud())) {
+                return existente;
+            }
+        }
+        return null;
+    }
+
 }

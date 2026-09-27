@@ -5,6 +5,7 @@
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -13,21 +14,24 @@ import java.time.LocalDateTime;
 public class DecretoPresidencial {
 
     private String numeracionOficial;
-    private LocalDateTime fechaExpedicion;
+    private String fechaExpedicion;
     private int tiempoVigenciaDias;
-    private ContingenteMilitar contingenteAutorizado;
-    private BaseMilitar baseAsignada;
+    private Expediente expedienteAsociado;
+    private boolean refrendadoPorDefensa;
 
-    public DecretoPresidencial(String numeracionOficial) {
-        this.numeracionOficial = numeracionOficial;
+    private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
+
+    public DecretoPresidencial() {
+        this.fechaExpedicion = LocalDateTime.now().format(formato);
+        this.refrendadoPorDefensa = false;
     }
 
-    public DecretoPresidencial(String numeracionOficial, LocalDateTime fechaExpedicion, int tiempoVigenciaDias, ContingenteMilitar contingenteAutorizado, BaseMilitar baseAsignada) {
+    public DecretoPresidencial(String numeracionOficial, int tiempoVigenciaDias, Expediente expedienteAsociado) {
         this.numeracionOficial = numeracionOficial;
-        this.fechaExpedicion = fechaExpedicion;
         this.tiempoVigenciaDias = tiempoVigenciaDias;
-        this.contingenteAutorizado = contingenteAutorizado;
-        this.baseAsignada = baseAsignada;
+        this.expedienteAsociado = expedienteAsociado;
+        this.fechaExpedicion = LocalDateTime.now().format(formato);
+        this.refrendadoPorDefensa = false;
     }
 
     public String getNumeracionOficial() {
@@ -38,11 +42,11 @@ public class DecretoPresidencial {
         this.numeracionOficial = numeracionOficial;
     }
 
-    public LocalDateTime getFechaExpedicion() {
+    public String getFechaExpedicion() {
         return fechaExpedicion;
     }
 
-    public void setFechaExpedicion(LocalDateTime fechaExpedicion) {
+    public void setFechaExpedicion(String fechaExpedicion) {
         this.fechaExpedicion = fechaExpedicion;
     }
 
@@ -54,21 +58,20 @@ public class DecretoPresidencial {
         this.tiempoVigenciaDias = tiempoVigenciaDias;
     }
 
-    public ContingenteMilitar getContingenteAutorizado() {
-        return contingenteAutorizado;
+    public Expediente getExpedienteAsociado() {
+        return expedienteAsociado;
     }
 
-    public void setContingenteAutorizado(ContingenteMilitar contingenteAutorizado) {
-        this.contingenteAutorizado = contingenteAutorizado;
+    public void setExpedienteAsociado(Expediente expedienteAsociado) {
+        this.expedienteAsociado = expedienteAsociado;
     }
 
-    public BaseMilitar getBaseAsignada() {
-        return baseAsignada;
+    public boolean isRefrendadoPorDefensa() {
+        return refrendadoPorDefensa;
     }
 
-    public void setBaseAsignada(BaseMilitar baseAsignada) {
-        this.baseAsignada = baseAsignada;
+    public void setRefrendadoPorDefensa(boolean refrendadoPorDefensa) {
+        this.refrendadoPorDefensa = refrendadoPorDefensa;
     }
-    
-    
+
 }

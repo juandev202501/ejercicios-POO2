@@ -35,6 +35,11 @@ public class Persona {
     public void setNuip(String nuip) {
         this.nuip = nuip;
     }
-    
+    public boolean tieneMismoNuip(Persona persona2) {
+        if (persona2 == null || this.nuip == null || persona2.getNuip() == null) {
+            return false;
+        }
+        return this.nuip.equalsIgnoreCase(persona2.getNuip());
+    }
     
 }

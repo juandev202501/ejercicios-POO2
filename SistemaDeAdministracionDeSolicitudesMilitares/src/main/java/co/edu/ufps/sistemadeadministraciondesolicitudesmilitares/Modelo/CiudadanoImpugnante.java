@@ -9,43 +9,33 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  * @author JUAN DAVID
  */
 public class CiudadanoImpugnante extends Persona {
-
-    private String motivoImpugnacion;
-    private boolean demandaAdmitida;
+    private String organizacionRepresentada;
+    private String correoContacto;
 
     public CiudadanoImpugnante() {
     }
 
-    public CiudadanoImpugnante(String motivoImpugnacion, boolean demandaAdmitida) {
-        this.motivoImpugnacion = motivoImpugnacion;
-        this.demandaAdmitida = demandaAdmitida;
+    public CiudadanoImpugnante(String organizacionRepresentada, String correoContacto, String nombre, String nuip) {
+        super(nombre, nuip);
+        this.organizacionRepresentada = organizacionRepresentada;
+        this.correoContacto = correoContacto;
     }
 
-    public String getMotivoImpugnacion() {
-        return motivoImpugnacion;
+    public String getOrganizacionRepresentada() {
+        return organizacionRepresentada;
     }
 
-    public void setMotivoImpugnacion(String motivoImpugnacion) {
-        this.motivoImpugnacion = motivoImpugnacion;
+    public void setOrganizacionRepresentada(String organizacionRepresentada) {
+        this.organizacionRepresentada = organizacionRepresentada;
     }
 
-    public boolean isDemandaAdmitida() {
-        return demandaAdmitida;
+    public String getCorreoContacto() {
+        return correoContacto;
     }
 
-    public void setDemandaAdmitida(boolean demandaAdmitida) {
-        this.demandaAdmitida = demandaAdmitida;
+    public void setCorreoContacto(String correoContacto) {
+        this.correoContacto = correoContacto;
     }
-
-    public DemandaNulidad interponerDemanda(String idDemanda, String fundamentos) {
-        if (fundamentos != null && !fundamentos.isEmpty()) {
-            return new DemandaNulidad(idDemanda, java.time.LocalDateTime.now(), fundamentos, true, false);
-        }
-        return null;
-    }
-
-    public String presentarPruebas(String descripcionPrueba) {
-        return "Evidencia anexada por " + this.getNombre() + ": " + descripcionPrueba;
-    }
-
+    
+    
 }

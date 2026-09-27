@@ -4,6 +4,8 @@
  */
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author JUAN DAVID
@@ -11,16 +13,17 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 public class MinisterioDeDefensa {
 
     private Ministro ministroTitular;
-    private String sedePrincipal;
-    private boolean requisitosAprobados;
+    private String sedeMinisterial;
+    private ArrayList<BaseMilitar> basesMilitares;
 
     public MinisterioDeDefensa() {
+        this.basesMilitares = new ArrayList<>();
     }
 
-    public MinisterioDeDefensa(Ministro ministroTitular, String sedePrincipal, boolean requisitosAprobados) {
+    public MinisterioDeDefensa(Ministro ministroTitular, String sedeMinisterial) {
         this.ministroTitular = ministroTitular;
-        this.sedePrincipal = sedePrincipal;
-        this.requisitosAprobados = requisitosAprobados;
+        this.sedeMinisterial = sedeMinisterial;
+        this.basesMilitares = new ArrayList<>();
     }
 
     public Ministro getMinistroTitular() {
@@ -31,35 +34,65 @@ public class MinisterioDeDefensa {
         this.ministroTitular = ministroTitular;
     }
 
-    public String getSedePrincipal() {
-        return sedePrincipal;
+    public String getSedeMinisterial() {
+        return sedeMinisterial;
     }
 
-    public void setSedePrincipal(String sedePrincipal) {
-        this.sedePrincipal = sedePrincipal;
+    public void setSedeMinisterial(String sedeMinisterial) {
+        this.sedeMinisterial = sedeMinisterial;
     }
 
-    public boolean isRequisitosAprobados() {
-        return requisitosAprobados;
+    public ArrayList<BaseMilitar> getBasesMilitares() {
+        return basesMilitares;
     }
 
-    public void setRequisitosAprobados(boolean requisitosAprobados) {
-        this.requisitosAprobados = requisitosAprobados;
+    public void setBasesMilitares(ArrayList<BaseMilitar> basesMilitares) {
+        this.basesMilitares = basesMilitares;
     }
 
     public String refrendarDecreto(DecretoPresidencial decreto) {
-        if (decreto != null && decreto.getNumeracionOficial() != null) {
-            this.requisitosAprobados = true;
-            return "El Ministerio ha refrendado el decreto " + decreto.getNumeracionOficial() + ".";
-        }
-        this.requisitosAprobados = false;
-        return "Error: Decreto inválido.";
+        decreto.setRefrendadoPorDefensa(true);
+        return "El MINISTERIO DE DEFENSA HA REFERENDADO EL DECRETO PRESIDENCIAL: " + decreto.getNumeracionOficial();
     }
 
-    public PlanOperacion estructurarPlanOperaciones(String idPlan, String reglas, String perimetro) {
-        if (this.requisitosAprobados) {
-            return new PlanOperacion(idPlan, reglas, perimetro, false);
+    public String registrarBaseMilitar(BaseMilitar base) {
+        if (this.duplicado(base) != null) {
+            return "ERROR: YA EXISTE UNA BASE MMILITAR REGISTRADA CON EL CODIGO" + base.getIdBase();
+        }
+
+        this.basesMilitares.add(base);
+        return "BASE MILITAR " + base.getNombre() + " REGISTRADA EXISTOSAMENE EN EL MINISTERIO DE DEFENSA ";
+    }
+
+    public BaseMilitar duplicado(BaseMilitar nueva) {
+        for (BaseMilitar base : this.basesMilitares) {
+            if (base.getIdBase().equalsIgnoreCase(nueva.getIdBase())) {
+                return base;
+            }
+
         }
         return null;
+    }
+
+    public String desalojarContingentesPorDecreto(DecretoPresidencial decretoAnulado) {
+        StringBuilder reporte = new StringBuilder();
+
+        for (BaseMilitar base : this.basesMilitares) {
+            ArrayList<String> idsADesalojar = new ArrayList<>();
+
+            for (ContingenteMilitar cont : base.getContingentesAlojamientos()) {
+                if (cont.getDecretoRespaldo().equals(decretoAnulado)) {
+                    idsADesalojar.add(cont.getIdContingente());
+                }
+            }
+
+            for (String idCont : idsADesalojar) {
+                base.retirarContingente(idCont);
+                reporte.append("\n -> BASE MILITAR ").append(base.getNombre().toUpperCase())
+                        .append(": CONTINGENTE ").append(idCont.toUpperCase()).append(" DESALOJADO EXITOSAMENTE.");
+            }
+        }
+
+        return reporte.toString();
     }
 }

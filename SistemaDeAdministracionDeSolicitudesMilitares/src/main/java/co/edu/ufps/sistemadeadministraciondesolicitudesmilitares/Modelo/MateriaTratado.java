@@ -10,5 +10,4 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  */
 public enum MateriaTratado {
     COOPERACION_MILITAR, ASISTENCIA_HUMANITARIA, OPERACIONES_DE_PAZ
-    
 }

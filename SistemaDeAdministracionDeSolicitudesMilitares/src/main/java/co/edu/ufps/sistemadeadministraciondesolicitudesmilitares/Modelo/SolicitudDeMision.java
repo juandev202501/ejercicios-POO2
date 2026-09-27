@@ -13,21 +13,24 @@ import java.time.LocalDateTime;
 public class SolicitudDeMision {
     private String idSolicitud;
     private NivelUrgencia nivelUrgencia;
+    private MateriaTratado materia;
     private String objetivo;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFinal;
-    private boolean cumplerequisitos;
-
+    private boolean cumpleRequisitos;
+    
     public SolicitudDeMision() {
+        this.cumpleRequisitos = true;
     }
 
-    public SolicitudDeMision(String idSolicitud, NivelUrgencia nivelUrgencia, String objetivo, LocalDateTime fechaInicio, LocalDateTime fechaFinal, boolean cumplerequisitos) {
+    public SolicitudDeMision(String idSolicitud, NivelUrgencia nivelUrgencia, MateriaTratado materia, String objetivo, LocalDateTime fechaInicio, LocalDateTime fechaFinal) {
         this.idSolicitud = idSolicitud;
         this.nivelUrgencia = nivelUrgencia;
+        this.materia = materia;
         this.objetivo = objetivo;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
-        this.cumplerequisitos = cumplerequisitos;
+        this.cumpleRequisitos=true;
     }
 
     public String getIdSolicitud() {
@@ -44,6 +47,14 @@ public class SolicitudDeMision {
 
     public void setNivelUrgencia(NivelUrgencia nivelUrgencia) {
         this.nivelUrgencia = nivelUrgencia;
+    }
+
+    public MateriaTratado getMateria() {
+        return materia;
+    }
+
+    public void setMateria(MateriaTratado materia) {
+        this.materia = materia;
     }
 
     public String getObjetivo() {
@@ -70,23 +81,14 @@ public class SolicitudDeMision {
         this.fechaFinal = fechaFinal;
     }
 
-    public boolean isCumplerequisitos() {
-        return cumplerequisitos;
+    public boolean isCumpleRequisitos() {
+        return cumpleRequisitos;
     }
 
-    public void setCumplerequisitos(boolean cumplerequisitos) {
-        this.cumplerequisitos = cumplerequisitos;
+    public void setCumpleRequisitos(boolean cumpleRequisitos) {
+        this.cumpleRequisitos = cumpleRequisitos;
     }
-
-    public boolean validarRequisitos() {
-        boolean objetivoValido = (this.objetivo != null && !this.objetivo.trim().isEmpty());
-        boolean fechasValidas = (this.fechaInicio != null && this.fechaFinal != null && this.fechaInicio.isBefore(this.fechaFinal));
-        
-        if (objetivoValido && fechasValidas) {
-            this.cumplerequisitos = true;
-            return true; 
-        }
-        this.cumplerequisitos = false;
-        return false; 
-    }
+    
+    
+    
 }

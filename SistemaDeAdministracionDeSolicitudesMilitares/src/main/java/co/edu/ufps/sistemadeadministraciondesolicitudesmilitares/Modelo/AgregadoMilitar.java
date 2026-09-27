@@ -8,18 +8,22 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  *
  * @author JUAN DAVID
  */
-public class AgregadoMilitar extends Persona{
+public class AgregadoMilitar extends Persona {
+    private PaisSolicitante paisOrigen;
     private String numeroPasaporte;
     private RamaMilitar rama;
 
     public AgregadoMilitar() {
     }
 
-    public AgregadoMilitar(String numeroPasaporte, RamaMilitar rama, String nombre, String nuip) {
+    public AgregadoMilitar(PaisSolicitante paisOrigen, String numeroPasaporte, RamaMilitar rama, String nombre, String nuip) {
         super(nombre, nuip);
+        this.paisOrigen = paisOrigen;
         this.numeroPasaporte = numeroPasaporte;
         this.rama = rama;
     }
+
+    
 
     public String getNumeroPasaporte() {
         return numeroPasaporte;
@@ -36,20 +40,17 @@ public class AgregadoMilitar extends Persona{
     public void setRama(RamaMilitar rama) {
         this.rama = rama;
     }
-   
-    public NotaDiplomatica emitirYFirmarNota(String idNota, String contenido) {
-        
-        String acreditacion = "Pasaporte: " + this.getNumeroPasaporte() + " - Rama: " + this.getRama();
-        NotaDiplomatica nuevaNota = new NotaDiplomatica(
-            idNota,
-            java.time.LocalDateTime.now(), // Fecha exacta de la firma
-            contenido,
-            this.getNombre(), // Nombre del emisor (heredado de Persona)[cite: 1]
-            acreditacion,
-            false // Empieza en false porque aún no ha sido radicada en Cancillería[cite: 23]
-        );
-        return nuevaNota;
+
+    public PaisSolicitante getPaisOrigen() {
+        return paisOrigen;
+    }
+
+    public void setPaisOrigen(PaisSolicitante paisOrigen) {
+        this.paisOrigen = paisOrigen;
     }
     
+    public NotaDiplomatica emitirYFirmarNota(String idNota, String contenido) {
+        return new NotaDiplomatica(idNota, contenido, this.getNombre(), this.numeroPasaporte);
+    }
     
 }

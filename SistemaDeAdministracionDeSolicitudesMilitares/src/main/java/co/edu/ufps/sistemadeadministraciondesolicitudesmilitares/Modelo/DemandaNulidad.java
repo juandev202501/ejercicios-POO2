@@ -5,28 +5,36 @@
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author JUAN DAVID
  */
 public class DemandaNulidad {
-    
+
     private String idDemanda;
-    private LocalDateTime fechaRadicacion;
-    private String fundamentosDerecho;
-    private boolean medidaCautelarSolicitada;
-    private boolean demandaAdmitida;
+    private String fundamentosDeDerecho;
+    private String fechaRadicacion;
+    private CiudadanoImpugnante demandante;
+    private Expediente expedienteDemandado;
+    private DecretoPresidencial decretoDemandado;
+    private EstadoDemanda estado;
+
+    private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
 
     public DemandaNulidad() {
+        this.fechaRadicacion = LocalDateTime.now().format(formato);
     }
 
-    public DemandaNulidad(String idDemanda, LocalDateTime fechaRadicacion, String fundamentosDerecho, boolean medidaCautelarSolicitada, boolean demandaAdmitida) {
+    public DemandaNulidad(String idDemanda, String fundamentosDeDerecho, CiudadanoImpugnante demandante, Expediente expedienteDemandado, DecretoPresidencial decretoDemandado) {
         this.idDemanda = idDemanda;
-        this.fechaRadicacion = fechaRadicacion;
-        this.fundamentosDerecho = fundamentosDerecho;
-        this.medidaCautelarSolicitada = medidaCautelarSolicitada;
-        this.demandaAdmitida = demandaAdmitida;
+        this.fundamentosDeDerecho = fundamentosDeDerecho;
+        this.demandante = demandante;
+        this.expedienteDemandado = expedienteDemandado;
+        this.decretoDemandado = decretoDemandado;
+        this.fechaRadicacion = LocalDateTime.now().format(formato);
+
     }
 
     public String getIdDemanda() {
@@ -37,44 +45,52 @@ public class DemandaNulidad {
         this.idDemanda = idDemanda;
     }
 
-    public LocalDateTime getFechaRadicacion() {
+    public String getFundamentosDeDerecho() {
+        return fundamentosDeDerecho;
+    }
+
+    public void setFundamentosDeDerecho(String fundamentosDeDerecho) {
+        this.fundamentosDeDerecho = fundamentosDeDerecho;
+    }
+
+    public String getFechaRadicacion() {
         return fechaRadicacion;
     }
 
-    public void setFechaRadicacion(LocalDateTime fechaRadicacion) {
+    public void setFechaRadicacion(String fechaRadicacion) {
         this.fechaRadicacion = fechaRadicacion;
     }
 
-    public String getFundamentosDerecho() {
-        return fundamentosDerecho;
+    public CiudadanoImpugnante getDemandante() {
+        return demandante;
     }
 
-    public void setFundamentosDerecho(String fundamentosDerecho) {
-        this.fundamentosDerecho = fundamentosDerecho;
+    public void setDemandante(CiudadanoImpugnante demandante) {
+        this.demandante = demandante;
     }
 
-    public boolean isMedidaCautelarSolicitada() {
-        return medidaCautelarSolicitada;
+    public Expediente getExpedienteDemandado() {
+        return expedienteDemandado;
     }
 
-    public void setMedidaCautelarSolicitada(boolean medidaCautelarSolicitada) {
-        this.medidaCautelarSolicitada = medidaCautelarSolicitada;
+    public void setExpedienteDemandado(Expediente expedienteDemandado) {
+        this.expedienteDemandado = expedienteDemandado;
     }
 
-    public boolean isDemandaAdmitida() {
-        return demandaAdmitida;
+    public DecretoPresidencial getDecretoDemandado() {
+        return decretoDemandado;
     }
 
-    public void setDemandaAdmitida(boolean demandaAdmitida) {
-        this.demandaAdmitida = demandaAdmitida;
+    public void setDecretoDemandado(DecretoPresidencial decretoDemandado) {
+        this.decretoDemandado = decretoDemandado;
     }
-    
-    
-    public String notificarEntidades() {
-        if (this.demandaAdmitida) {
-            return "Notificación: Se informó al Ejecutivo sobre la demanda " + this.idDemanda + ".";
-        }
-        return "La demanda aún no ha sido admitida.";
+
+    public EstadoDemanda getEstado() {
+        return estado;
     }
-    
+
+    public void setEstado(EstadoDemanda estado) {
+        this.estado = estado;
+    }
+
 }

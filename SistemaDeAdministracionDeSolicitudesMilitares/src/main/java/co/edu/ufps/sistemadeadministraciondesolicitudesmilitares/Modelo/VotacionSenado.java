@@ -5,6 +5,7 @@
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -15,20 +16,25 @@ public class VotacionSenado {
     private int votosAFavor;
     private int votosEnContra;
     private int abstenciones;
-    private LocalDateTime fechaVotacion;
+    private String fechaVotacion;
     private boolean quorumAlcanzado;
     private boolean aprobadoParaPlenaria;
+    private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
 
     public VotacionSenado() {
+        this.fechaVotacion = LocalDateTime.now().format(formato);
+        this.quorumAlcanzado = false;
+        this.aprobadoParaPlenaria = false;
+
     }
 
-    public VotacionSenado(int votosAFavor, int votosEnContra, int abstenciones, LocalDateTime fechaVotacion, boolean quorumAlcanzado, boolean aprobadoParaPlenaria) {
+    public VotacionSenado(int votosAFavor, int votosEnContra, int abstenciones, int totalSenadores) {
         this.votosAFavor = votosAFavor;
         this.votosEnContra = votosEnContra;
         this.abstenciones = abstenciones;
-        this.fechaVotacion = fechaVotacion;
-        this.quorumAlcanzado = quorumAlcanzado;
-        this.aprobadoParaPlenaria = aprobadoParaPlenaria;
+        this.fechaVotacion = LocalDateTime.now().format(formato);
+        calcularResultadoVotacion(totalSenadores);
+
     }
 
     public int getVotosAFavor() {
@@ -55,11 +61,11 @@ public class VotacionSenado {
         this.abstenciones = abstenciones;
     }
 
-    public LocalDateTime getFechaVotacion() {
+    public String getFechaVotacion() {
         return fechaVotacion;
     }
 
-    public void setFechaVotacion(LocalDateTime fechaVotacion) {
+    public void setFechaVotacion(String fechaVotacion) {
         this.fechaVotacion = fechaVotacion;
     }
 
@@ -79,23 +85,15 @@ public class VotacionSenado {
         this.aprobadoParaPlenaria = aprobadoParaPlenaria;
     }
 
-    public String calcularResultado(int totalSenadores) {
-        int totalVotos = this.votosAFavor + this.votosEnContra + this.abstenciones;
-        int quorumMinimo = (totalSenadores / 2) + 1;
+    public void calcularResultadoVotacion(int totalSenadores) {
+        int totalEmitidos = this.votosAFavor + this.votosEnContra + this.abstenciones;
 
-        if (totalVotos >= quorumMinimo) {
-            this.quorumAlcanzado = true;
-            if (this.votosAFavor > this.votosEnContra) {
-                this.aprobadoParaPlenaria = true;
-                return "Resultado: Aprobado con " + this.votosAFavor + " votos a favor.";
-            } else {
-                this.aprobadoParaPlenaria = false;
-                return "Resultado: Rechazado por votos insuficientes.";
-            }
+        this.quorumAlcanzado = totalEmitidos >= (totalSenadores / 2) + 1;
+
+        if (this.quorumAlcanzado && this.votosAFavor > this.votosEnContra) {
+            this.aprobadoParaPlenaria = true;
         } else {
-            this.quorumAlcanzado = false;
             this.aprobadoParaPlenaria = false;
-            return "Alerta: Votación nula por falta de quórum.";
         }
     }
 

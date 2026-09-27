@@ -8,30 +8,21 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  *
  * @author JUAN DAVID
  */
-public class Militar extends Persona{
+public class Militar extends Persona {
 
-    private int aniosServicio;
     private GradoMilitar grado;
-    private EspecialidadCuerpo especialidad;
+    private RamaMilitar rama;
+    private String unidadAdscrita;
 
     public Militar() {
+
     }
 
-    public Militar(int aniosServicio, GradoMilitar grado, EspecialidadCuerpo especialidad, String nombre, String nuip) {
+    public Militar(String nombre, String nuip, GradoMilitar grado, RamaMilitar rama, String unidadAdscrita) {
         super(nombre, nuip);
-        this.aniosServicio = aniosServicio;
         this.grado = grado;
-        this.especialidad = especialidad;
-    }
-
-    
-
-    public int getAniosServicio() {
-        return aniosServicio;
-    }
-
-    public void setAniosServicio(int aniosServicio) {
-        this.aniosServicio = aniosServicio;
+        this.rama = rama;
+        this.unidadAdscrita = unidadAdscrita;
     }
 
     public GradoMilitar getGrado() {
@@ -42,14 +33,20 @@ public class Militar extends Persona{
         this.grado = grado;
     }
 
-    public EspecialidadCuerpo getEspecialidad() {
-        return especialidad;
+    public RamaMilitar getRama() {
+        return rama;
     }
 
-    public void setEspecialidad(EspecialidadCuerpo especialidad) {
-        this.especialidad = especialidad;
+    public void setRama(RamaMilitar rama) {
+        this.rama = rama;
     }
 
-    
+    public String getUnidadAdscrita() {
+        return unidadAdscrita;
+    }
+
+    public void setUnidadAdscrita(String unidadAdscrita) {
+        this.unidadAdscrita = unidadAdscrita;
+    }
 
 }

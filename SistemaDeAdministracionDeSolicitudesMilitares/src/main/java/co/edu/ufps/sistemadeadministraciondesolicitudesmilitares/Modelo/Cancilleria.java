@@ -15,28 +15,18 @@ public class Cancilleria {
     private Ministro ministroRepresentante;
     private String sedeOficial;
     private boolean sistemaRadicacionActivo;
-    private boolean requisitosValidos;
-    private boolean estadoaprobado;
-    private ArrayList<NotaDiplomatica> notasRecibidas;
+    private ArrayList<NotaDiplomatica> notasRadicadas;
 
     public Cancilleria() {
+        this.notasRadicadas = new ArrayList<>();
+        this.sistemaRadicacionActivo = true;
     }
 
-    public Cancilleria(Ministro ministroRepresentante, String sedeOficial, boolean sistemaRadicacionActivo, boolean requisitosValidos, boolean estadoaprobado) {
+    public Cancilleria(Ministro ministroRepresentante, String sedeOficial) {
         this.ministroRepresentante = ministroRepresentante;
         this.sedeOficial = sedeOficial;
-        this.sistemaRadicacionActivo = sistemaRadicacionActivo;
-        this.requisitosValidos = requisitosValidos;
-        this.estadoaprobado = estadoaprobado;
-        this.notasRecibidas = new ArrayList<>();
-    }
-
-    public ArrayList<NotaDiplomatica> getNotasRecibidas() {
-        return notasRecibidas;
-    }
-
-    public void setNotasRecibidas(ArrayList<NotaDiplomatica> notasRecibidas) {
-        this.notasRecibidas = notasRecibidas;
+        this.sistemaRadicacionActivo = true;
+        this.notasRadicadas = new ArrayList<>();
     }
 
     public Ministro getMinistroRepresentante() {
@@ -63,44 +53,30 @@ public class Cancilleria {
         this.sistemaRadicacionActivo = sistemaRadicacionActivo;
     }
 
-    public boolean isRequisitosValidos() {
-        return requisitosValidos;
+    public ArrayList<NotaDiplomatica> getNotasRadicadas() {
+        return notasRadicadas;
     }
 
-    public void setRequisitosValidos(boolean requisitosValidos) {
-        this.requisitosValidos = requisitosValidos;
+    public void setNotasRadicadas(ArrayList<NotaDiplomatica> notasRadicadas) {
+        this.notasRadicadas = notasRadicadas;
     }
-
-    public boolean isEstadoaprobado() {
-        return estadoaprobado;
-    }
-
-    public void setEstadoaprobado(boolean estadoaprobado) {
-        this.estadoaprobado = estadoaprobado;
-    }
-
-    public boolean verificarCredencialesNota(NotaDiplomatica nota) {
-        if (nota != null && nota.getAcriditacionEmisor() != null && !nota.getAcriditacionEmisor().isEmpty()) {
-            this.requisitosValidos = true;
-            return true;
+    
+    public String radicarNotaDiplomatica(NotaDiplomatica nuevaNota)
+    {
+        if(this.duplicado(nuevaNota)!=null)
+        {
+            return "ERROR: YA EXISTE UNA NOTA DIPLOMATICA REGISTRADA CON EL ID "+nuevaNota.getIdNota();
         }
-        this.requisitosValidos = false;
-        return false;
+        nuevaNota.setEstadoRadicacion(true);
+        return "NOTA DIPLOMATICA "+nuevaNota.getIdNota()+" RADICADA CON EXITO EN CANCILLERIA";
     }
 
-    public String registrarRadicacion(NotaDiplomatica nota) {
-        if (verificarCredencialesNota(nota)) {
-            nota.setEstadoRadicacion(true);
-            this.notasRecibidas.add(nota);
-            this.sistemaRadicacionActivo = true;
-            return "Éxito: La nota diplomática " + nota.getIdNota() + " ha sido radicada oficialmente.";
-        }
-        return "Error: La nota diplomática no superó la verificación.";
-    }
+    public NotaDiplomatica duplicado(NotaDiplomatica nuevo) {
+        for (NotaDiplomatica notaRadicada : notasRadicadas) {
+            if (notaRadicada.getIdNota().equalsIgnoreCase(nuevo.getIdNota())) {
+                return notaRadicada;
+            }
 
-    public Expediente crearExpediente(String idExpediente) {
-        if (this.sistemaRadicacionActivo) {
-            return new Expediente(idExpediente, java.time.LocalDateTime.now(), EstadoExpediente.RADICADO, false);
         }
         return null;
     }

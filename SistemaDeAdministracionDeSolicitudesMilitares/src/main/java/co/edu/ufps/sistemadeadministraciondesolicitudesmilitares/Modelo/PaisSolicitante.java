@@ -15,9 +15,10 @@ public class PaisSolicitante {
     private String nombrePais;
     private String codigoIso;
     private Continente continente;
-    ArrayList<AgregadoMilitar> agregados;
+    private ArrayList<AgregadoMilitar> agregados;
 
     public PaisSolicitante() {
+        this.agregados = new ArrayList<>();
     }
 
     public PaisSolicitante(String nombrePais, String codigoIso, Continente continente) {
@@ -25,23 +26,6 @@ public class PaisSolicitante {
         this.codigoIso = codigoIso;
         this.continente = continente;
         this.agregados = new ArrayList<>();
-
-    }
-
-    public Continente getContinente() {
-        return continente;
-    }
-
-    public void setContinente(Continente continente) {
-        this.continente = continente;
-    }
-
-    public ArrayList<AgregadoMilitar> getAgregados() {
-        return agregados;
-    }
-
-    public void setAgregados(ArrayList<AgregadoMilitar> agregados) {
-        this.agregados = agregados;
     }
 
     public String getNombrePais() {
@@ -60,11 +44,31 @@ public class PaisSolicitante {
         this.codigoIso = codigoIso;
     }
 
-    public String designarAgregadoMilitar(AgregadoMilitar agregado) {
-        if (agregado != null) {
-            this.agregados.add(agregado);
-            return "El país " + this.nombrePais + " ha designado oficialmente al agregado " + agregado.getNombre() + ".";
-        }
-        return "Error: Representante diplomático nulo o inválido.";
+    public Continente getContinente() {
+        return continente;
     }
+
+    public void setContinente(Continente continente) {
+        this.continente = continente;
+    }
+
+    public ArrayList<AgregadoMilitar> getAgregados() {
+        return agregados;
+    }
+
+    public void setAgregados(ArrayList<AgregadoMilitar> agregados) {
+        this.agregados = agregados;
+    }
+
+    public String designarAgregadoMilitar(AgregadoMilitar agregado) {
+        for (AgregadoMilitar existente : agregados) {
+            if (existente.tieneMismoNuip(agregado)) {
+                return "ERROR YA EXISTE UN AGREGADO CON EL NUIP" + agregado.getNuip();
+            }
+        }
+
+        this.agregados.add(agregado);
+        return "EL PAIS" + this.nombrePais + " HA DESIGNADO OFICIALMENTE AL AGREGADO " + agregado.getNombre();
+    }
+
 }

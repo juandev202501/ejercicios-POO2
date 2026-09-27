@@ -10,5 +10,4 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  */
 public enum NivelUrgencia {
     ORDINARIO, EXTRAORDINARIO, URGENTE
-    
 }

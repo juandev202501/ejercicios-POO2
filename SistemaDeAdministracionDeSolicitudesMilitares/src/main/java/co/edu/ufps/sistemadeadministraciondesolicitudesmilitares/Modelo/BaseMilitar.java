@@ -11,23 +11,23 @@ import java.util.ArrayList;
  * @author JUAN DAVID
  */
 public class BaseMilitar {
+
     private String idBase;
-    private String nombreBase;
-    private String ubicacion;
-    private int capacidadAlojamiento;
-    private boolean activaOperativa;
-    private ArrayList<ContingenteMilitar>contingentes;
+    private String nombre;
+    private String ubicacionGeografica;
+    private int capacidadMaximaEfectivos;
+    private ArrayList<ContingenteMilitar> contingentesAlojamientos;
 
     public BaseMilitar() {
+        this.contingentesAlojamientos = new ArrayList<>();
     }
 
-    public BaseMilitar(String idBase, String nombreBase, String ubicacion, int ccapacidadAlojamiento, boolean activaOperativa) {
+    public BaseMilitar(String idBase, String nombre, String ubicacionGeografica, int capacidadMaximaEfectivos) {
         this.idBase = idBase;
-        this.nombreBase = nombreBase;
-        this.ubicacion = ubicacion;
-        this.capacidadAlojamiento = ccapacidadAlojamiento;
-        this.activaOperativa = activaOperativa;
-        this.contingentes=new ArrayList<>();
+        this.nombre = nombre;
+        this.ubicacionGeografica = ubicacionGeografica;
+        this.capacidadMaximaEfectivos = capacidadMaximaEfectivos;
+        this.contingentesAlojamientos = new ArrayList<>();
     }
 
     public String getIdBase() {
@@ -38,45 +38,63 @@ public class BaseMilitar {
         this.idBase = idBase;
     }
 
-    public String getNombreBase() {
-        return nombreBase;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreBase(String nombreBase) {
-        this.nombreBase = nombreBase;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getUbicacion() {
-        return ubicacion;
+    public String getUbicacionGeografica() {
+        return ubicacionGeografica;
     }
 
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
+    public void setUbicacionGeografica(String ubicacionGeografica) {
+        this.ubicacionGeografica = ubicacionGeografica;
     }
 
-    public int getCapacidadAlojamiento() {
-        return capacidadAlojamiento;
+    public int getCapacidadMaximaEfectivos() {
+        return capacidadMaximaEfectivos;
     }
 
-    public void setCapacidadAlojamiento(int capacidadAlojamiento) {
-        this.capacidadAlojamiento = capacidadAlojamiento;
+    public void setCapacidadMaximaEfectivos(int capacidadMaximaEfectivos) {
+        this.capacidadMaximaEfectivos = capacidadMaximaEfectivos;
     }
 
-    public boolean isActivaOperativa() {
-        return activaOperativa;
+    public ArrayList<ContingenteMilitar> getContingentesAlojamientos() {
+        return contingentesAlojamientos;
     }
 
-    public void setActivaOperativa(boolean activaOperativa) {
-        this.activaOperativa = activaOperativa;
+    public void setContingentesAlojamientos(ArrayList<ContingenteMilitar> contingentesAlojamientos) {
+        this.contingentesAlojamientos = contingentesAlojamientos;
     }
 
-    public ArrayList<ContingenteMilitar> getContingentes() {
-        return contingentes;
+    public String alojarContingente(ContingenteMilitar contingente) {
+        if (this.duplicado(contingente) != null) {
+            return "ERROR: EL CONTINGENTE CON ID " + contingente.getIdContingente() + " YA SE ENCUENTRA ALOJADO EN ESTA BASE";
+        }
+
+        this.contingentesAlojamientos.add(contingente);
+        return "CONTINGENTE " + contingente.getIdContingente() + " ALOJADO EXITOSAMENTE EN LA BASE " + this.nombre;
     }
 
-    public void setContingentes(ArrayList<ContingenteMilitar> contingentes) {
-        this.contingentes = contingentes;
+    public ContingenteMilitar duplicado(ContingenteMilitar nuevo) {
+        for (ContingenteMilitar cont : this.contingentesAlojamientos) {
+            if (cont.getIdContingente().equalsIgnoreCase(nuevo.getIdContingente())) {
+                return cont;
+            }
+        }
+        return null;
     }
-    
-    
+    public boolean retirarContingente(String idContingente) {
+        for (int i = 0; i < this.contingentesAlojamientos.size(); i++) {
+            if (this.contingentesAlojamientos.get(i).getIdContingente().equalsIgnoreCase(idContingente)) {
+                this.contingentesAlojamientos.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
