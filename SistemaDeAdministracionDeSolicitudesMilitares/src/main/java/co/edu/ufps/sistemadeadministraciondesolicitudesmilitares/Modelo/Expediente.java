@@ -89,22 +89,23 @@ public class Expediente {
 
     public String anexarSolicitud(SolicitudDeMision solicitud) {
 
-        if (this.duplicado(solicitud) != null) {
-            return "Error: YA EXISTE UNA SOLICITUD CON CODIGO " + solicitud.getIdSolicitud() + " EN ESTE EXPEDIENTE";
+        if(duplicado(solicitud)!=null)
+        {
+            return "ERROR YA EXISTE UNA SOLICITUD DE MISION CON ID(N°"+solicitud.getIdSolicitud()+") EN EL EXPEDIENTE (N°"+this.idExpediente+")";
         }
-
         this.solicitudes.add(solicitud);
         this.documentacionCompleta = true;
-        return "SOLICITUD " + solicitud.getIdSolicitud() + " ANEXADA CON EXITO AL EXPEDIENTE " + this.idExpediente;
+        return "SOLICITUD (N°" + solicitud.getIdSolicitud() + ") ANEXADA CON EXITO AL EXPEDIENTE (N°" + this.idExpediente+")";
     }
-
-    public SolicitudDeMision duplicado(SolicitudDeMision nueva) {
-        for (SolicitudDeMision existente : this.solicitudes) {
-            if (existente.getIdSolicitud().equalsIgnoreCase(nueva.getIdSolicitud())) {
-                return existente;
+    public SolicitudDeMision duplicado(SolicitudDeMision solicitud2)
+    {
+        for (SolicitudDeMision solicitud : solicitudes) {
+            if(solicitud.getIdSolicitud().equalsIgnoreCase(solicitud2.getIdSolicitud()))
+            {
+                return solicitud;
             }
+            
         }
         return null;
     }
-
 }

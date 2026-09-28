@@ -50,7 +50,7 @@ public class AgregadoMilitar extends Persona {
     }
     
     public NotaDiplomatica emitirYFirmarNota(String idNota, String contenido) {
-        return new NotaDiplomatica(idNota, contenido, this.getNombre(), this.numeroPasaporte);
+        return new NotaDiplomatica(idNota, contenido, this.getNuip(),this.paisOrigen.getCodigoIso());
     }
     
 }

@@ -14,19 +14,19 @@ public class ConsejoDeEstado {
 
     private String salaCompetente;
     private String direccion;
-    private boolean conceptoEmitido;
+    private ArrayList<Expediente> expedientesRecibidos;
     private ArrayList<DemandaNulidad> demandasRecibidas;
 
     public ConsejoDeEstado() {
-        this.conceptoEmitido = false;
         this.demandasRecibidas = new ArrayList<>();
+        this.expedientesRecibidos = new ArrayList<>();
     }
 
     public ConsejoDeEstado(String salaCompetente, String direccion) {
         this.salaCompetente = salaCompetente;
         this.direccion = direccion;
-        this.conceptoEmitido = false;
         this.demandasRecibidas = new ArrayList<>();
+        this.expedientesRecibidos = new ArrayList<>();
     }
 
     public String getSalaCompetente() {
@@ -35,14 +35,6 @@ public class ConsejoDeEstado {
 
     public void setSalaCompetente(String salaCompetente) {
         this.salaCompetente = salaCompetente;
-    }
-
-    public boolean isConceptoEmitido() {
-        return conceptoEmitido;
-    }
-
-    public void setConceptoEmitido(boolean conceptoEmitido) {
-        this.conceptoEmitido = conceptoEmitido;
     }
 
     public ArrayList<DemandaNulidad> getDemandasRecibidas() {
@@ -60,15 +52,31 @@ public class ConsejoDeEstado {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-    
 
-    public String emitirConceptoJuridico(Expediente expediente) {
-        if (!expediente.isDocumentacionCompleta()) {
-            return "ERROR: EL EXPEDIENTE" + expediente.getIdExpediente() + " CARECE DE LA DOCUMENTACION COMPLETA REQUERIDA PARA EMITIR CONCEPTO JURIDICO ";
+    public ArrayList<Expediente> getExpedientesRecibidos() {
+        return expedientesRecibidos;
+    }
+
+    public void setExpedientesRecibidos(ArrayList<Expediente> expedientesRecibidos) {
+        this.expedientesRecibidos = expedientesRecibidos;
+    }
+    
+    public String recibirExpediente(Expediente expediente)
+    {
+        this.expedientesRecibidos.add(expediente);
+        return "EL CONSEJO DE ESTADO RECIBIO DE FORMA EXITOSA EL EXPEDIENTE (N°"+expediente.getIdExpediente()+")";
+        
+    }
+    
+    public String emitirConceptoJuridico(Expediente expediente, boolean esFavorable, String consideraciones) {
+        
+        if (esFavorable) {
+            expediente.setEstadoActual(EstadoExpediente.EN_ESTUDIO);
+            return "EL CONSEJO DE ESTADO EMITIÓ CONCEPTO JURÍDICO FAVORABLE PARA EL EXPEDIENTE: " + expediente.getIdExpediente() + ". CONSIDERACIONES: " + consideraciones;
+        } else {
+            expediente.setEstadoActual(EstadoExpediente.ARCHIVADO);
+            return "EL CONSEJO DE ESTADO EMITIÓ CONCEPTO JURÍDICO DESFAVORABLE PARA EL EXPEDIENTE: " + expediente.getIdExpediente() + ". CONSIDERACIONES: " + consideraciones;
         }
-        expediente.setEstadoActual(EstadoExpediente.EN_ESTUDIO);
-        this.conceptoEmitido = true;
-        return "EL CONSEJO DE ESTADO EMITIO CONCEPTO JURIDICO FAVORABLE PARA EL EXPEDIENTE: " + expediente.getIdExpediente();
     }
 
     public String radicarDemandaNulidad(DemandaNulidad demanda) {

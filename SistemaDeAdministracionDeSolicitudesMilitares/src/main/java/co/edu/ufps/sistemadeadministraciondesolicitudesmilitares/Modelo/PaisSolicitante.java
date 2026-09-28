@@ -63,12 +63,12 @@ public class PaisSolicitante {
     public String designarAgregadoMilitar(AgregadoMilitar agregado) {
         for (AgregadoMilitar existente : agregados) {
             if (existente.tieneMismoNuip(agregado)) {
-                return "ERROR YA EXISTE UN AGREGADO CON EL NUIP" + agregado.getNuip();
+                return "ERROR YA EXISTE UN AGREGADO CON EL NUIP (" + agregado.getNuip()+")";
             }
         }
 
         this.agregados.add(agregado);
-        return "EL PAIS" + this.nombrePais + " HA DESIGNADO OFICIALMENTE AL AGREGADO " + agregado.getNombre();
+        return "EL PAIS (" + this.nombrePais + ") HA DESIGNADO OFICIALMENTE AL AGREGADO (" + agregado.getNombre()+")";
     }
 
 }

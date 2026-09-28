@@ -16,8 +16,8 @@ public class NotaDiplomatica {
     private String idNota;
     private String fechaEmision;
     private String contenidoOficial;
-    private String nombreEmisor;
-    private String acreditacionEmisor;
+    private String nuipEmisor;
+    private String isoPais;
     private boolean estadoRadicacion;
     private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
 
@@ -26,11 +26,11 @@ public class NotaDiplomatica {
         this.fechaEmision = LocalDateTime.now().format(formato);
     }
 
-    public NotaDiplomatica(String idNota, String contenidoOficial, String nombreEmisor, String acreditacionEmisor) {
+    public NotaDiplomatica(String idNota, String contenidoOficial, String nuipEmisor,String isoPais) {
         this.idNota = idNota;
         this.contenidoOficial = contenidoOficial;
-        this.nombreEmisor = nombreEmisor;
-        this.acreditacionEmisor = acreditacionEmisor;
+        this.nuipEmisor = nuipEmisor;
+        this.isoPais=isoPais;
         this.fechaEmision = LocalDateTime.now().format(formato);
         this.estadoRadicacion = false;
     }
@@ -59,22 +59,13 @@ public class NotaDiplomatica {
         this.contenidoOficial = contenidoOficial;
     }
 
-    public String getNombreEmisor() {
-        return nombreEmisor;
+    public String getNuipEmisor() {
+        return nuipEmisor;
     }
 
-    public void setNombreEmisor(String nombreEmisor) {
-        this.nombreEmisor = nombreEmisor;
+    public void setNuipEmisor(String nuipEmisor) {
+        this.nuipEmisor = nuipEmisor;
     }
-
-    public String getAcreditacionEmisor() {
-        return acreditacionEmisor;
-    }
-
-    public void setAcreditacionEmisor(String acreditacionEmisor) {
-        this.acreditacionEmisor = acreditacionEmisor;
-    }
-
     public boolean isEstadoRadicacion() {
         return estadoRadicacion;
     }
@@ -82,5 +73,14 @@ public class NotaDiplomatica {
     public void setEstadoRadicacion(boolean estadoRadicacion) {
         this.estadoRadicacion = estadoRadicacion;
     }
+
+    public String getIsoPais() {
+        return isoPais;
+    }
+
+    public void setIsoPais(String isoPais) {
+        this.isoPais = isoPais;
+    }
+    
 
 }

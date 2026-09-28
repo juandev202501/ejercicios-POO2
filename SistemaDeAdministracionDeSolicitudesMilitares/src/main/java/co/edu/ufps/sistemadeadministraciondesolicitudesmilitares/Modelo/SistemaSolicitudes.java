@@ -4,6 +4,8 @@
  */
 package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author JUAN DAVID
@@ -17,25 +19,23 @@ public class SistemaSolicitudes {
     private ComandoGeneral comandoGeneral;
     private Presidente presidenteActual;
 
+    // Lista global de países registrados
+    private ArrayList<PaisSolicitante> paisesRegistrados;
+
     public SistemaSolicitudes() {
-        // 1. Presidente: public Presidente(String despacho, String periodoMandato, String nombre, String nuip)
+        this.paisesRegistrados = new ArrayList<>();
+
         this.presidenteActual = new Presidente("Casa de Nariño", "2026-2030", "Abelardo", "1098765432");
 
-        // 2. Cancillería con su Ministro: public Ministro(String nombre, String nuip, TipoMinistro tipoMinistro, String decretoNombramiento)
         Ministro cancillerTitular = new Ministro("Canciller Titular", "900123456", TipoMinistro.MINISTRO_RELACIONES_EXTERIORES, "Decreto Nombramiento Canciller");
         this.cancilleria = new Cancilleria(cancillerTitular, "Palacio de San Carlos, Bogotá D.C.");
 
-        // 3. Consejo de Estado
         this.consejoDeEstado = new ConsejoDeEstado("Sala de Consulta y Servicio Civil", "Palacio de Justicia, Bogotá D.C.");
-
-        // 4. Senado de la República
         this.senado = new Senado(108, "Plenaria del Senado de la República - Capitolio Nacional");
 
-        // 5. Ministerio de Defensa con su Ministro
         Ministro ministroDefensaTitular = new Ministro("Ministro de Defensa", "900987654", TipoMinistro.MINISTRO_DEFENSA_NACIONAL, "Decreto Nombramiento MinDefensa");
         this.ministerioDeDefensa = new MinisterioDeDefensa(ministroDefensaTitular, "CAN, Bogotá D.C.");
 
-        // 6. Comando General: public ComandanteJefe(GradoMilitar rango, RamaMilitar fuerza, String decretoNombramiento, String nombre, String nuip)
         ComandanteJefe comandanteJefe = new ComandanteJefe(
                 GradoMilitar.OFICIAL,
                 RamaMilitar.EJERCITO,
@@ -93,8 +93,151 @@ public class SistemaSolicitudes {
     public void setPresidenteActual(Presidente presidenteActual) {
         this.presidenteActual = presidenteActual;
     }
-    
 
+    public ArrayList<PaisSolicitante> getPaisesRegistrados() {
+        return paisesRegistrados;
+    }
+
+    public void setPaisesRegistrados(ArrayList<PaisSolicitante> paisesRegistrados) {
+        this.paisesRegistrados = paisesRegistrados;
+    }
+
+    // --- MÉTODOS QUE EL CONTROLADOR INVOCARÁ DIRECTAMENTE ---
+    public String registrarPais(String nombre, String codigoIso, String continenteStr) {
+        for (PaisSolicitante p : this.paisesRegistrados) {
+            if (p.getCodigoIso().equalsIgnoreCase(codigoIso)) {
+                return "ERROR: YA EXISTE UN PAÍS REGISTRADO CON EL CÓDIGO ISO (" + codigoIso + ")";
+            }
+            if (p.getNombrePais().equalsIgnoreCase(nombre)) {
+                return "ERROR: YA EXISTE UN PAÍS REGISTRADO CON EL NOMBRE (" + nombre + ")";
+            }
+        }
+
+        Continente continenteEnum;
+        continenteEnum = Continente.valueOf(continenteStr);
+
+        PaisSolicitante nuevoPais = new PaisSolicitante(nombre, codigoIso, continenteEnum);
+
+        this.paisesRegistrados.add(nuevoPais);
+        return "PAÍS REGISTRADO CON ÉXITO: " + nuevoPais.getNombrePais() + " (" + nuevoPais.getCodigoIso() + " - " + nuevoPais.getContinente() + ")";
+
+    }
+
+    public String designarAgregadoMilitar(String codigoIsoPais, String nombre, String nuip, String pasaporte, String ramaStr) {
+        PaisSolicitante paisEncontrado = buscarPaisPorIso(codigoIsoPais);
+
+        RamaMilitar ramaEnum;
+        ramaEnum = RamaMilitar.valueOf(ramaStr);
+
+        AgregadoMilitar agregado = new AgregadoMilitar(paisEncontrado, pasaporte, ramaEnum, nombre, nuip);
+
+        return paisEncontrado.designarAgregadoMilitar(agregado);
+
+    }
+
+    public PaisSolicitante buscarPaisPorIso(String codigoIso) {
+        for (PaisSolicitante p : this.paisesRegistrados) {
+            if (p.getCodigoIso().equalsIgnoreCase(codigoIso)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public String emitirNotaDiplomatica(String nuipAgregado, String idNota, String contenido) {
+        AgregadoMilitar emisor = null;
+        for (PaisSolicitante paisRegistrado : paisesRegistrados) {
+            for (AgregadoMilitar agregado : paisRegistrado.getAgregados()) {
+                if (agregado.getNuip().equalsIgnoreCase(nuipAgregado)) {
+                    emisor = agregado;
+                    break;
+                }
+
+            }
+
+        }
+        NotaDiplomatica nota = emisor.emitirYFirmarNota(idNota, contenido);
+
+        return this.cancilleria.recibirNotaDiplomatica(nota);
+    }
+
+    public String radicarNotaDiplomatica(String idNotaARadicar) {
+        return (this.cancilleria.radicarNotaDiplomatica(idNotaARadicar));
+    }
+
+    public String crearSolicitudDeMision(String idNota, String idSolicitud, String urgenciaStr, String materiaStr, String objetivo, String fechaInicio, String fechaFinal) {
+
+        NotaDiplomatica notaRadicada = this.cancilleria.buscarIdRadicada(idNota);
+
+        NivelUrgencia urgenciaEnum;
+        MateriaTratado materiaEnum;
+        urgenciaEnum = NivelUrgencia.valueOf(urgenciaStr);
+        materiaEnum = MateriaTratado.valueOf(materiaStr);
+
+        SolicitudDeMision nuevaSolicitud = new SolicitudDeMision(
+                idSolicitud,
+                urgenciaEnum,
+                materiaEnum,
+                objetivo,
+                fechaInicio,
+                fechaFinal,
+                notaRadicada
+        );
+
+        return this.cancilleria.registrarSolicitudMision(nuevaSolicitud);
+    }
+
+    public String crearExpediente(String idExpediente, String isoPaisAdjuntado) {
+        PaisSolicitante pais = buscarPaisPorIso(isoPaisAdjuntado);
+        Expediente e = new Expediente(idExpediente, pais);
+        return this.cancilleria.registrarExpediente(e);
+    }
+
+    public String anexarSolicitudAExpediente(String idExpediente, String idSolicitud) {
+        Expediente exp = this.cancilleria.buscarExpedientePorId(idExpediente);
+
+        SolicitudDeMision solicitud = this.cancilleria.buscarSolicitudPorId(idSolicitud);
+        return exp.anexarSolicitud(solicitud);
+    }
+
+    public String emitirConceptoJuridico(String idExpediente, boolean esFavorable, String consideraciones) {
+        Expediente exp = this.cancilleria.buscarExpedientePorId(idExpediente);
+
+        return this.consejoDeEstado.emitirConceptoJuridico(exp, esFavorable, consideraciones);
+    }
+    public String enviarExpedienteAConsejoDeEstado(String idExpediente)
+    {
+        return this.enviarExpedienteAConsejoDeEstado(idExpediente);
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public String procesarSentenciaYEjecutarRetiro(String idDemanda, boolean estimarDemanda) {
         // 1. El Consejo de Estado dicta la sentencia
         String resultadoFallo = this.consejoDeEstado.fallarDemandaNulidad(idDemanda, estimarDemanda);
@@ -116,6 +259,11 @@ public class SistemaSolicitudes {
         }
 
         return resultadoFallo.toUpperCase();
+    }
+
+    public ArrayList<String> retornarSolicitudesCompatibles(String idExpediente) {
+        return this.cancilleria.retornarSolicitudesCompatibles(idExpediente);
+
     }
 
 }

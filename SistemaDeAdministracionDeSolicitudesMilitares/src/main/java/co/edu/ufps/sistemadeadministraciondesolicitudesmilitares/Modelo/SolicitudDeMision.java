@@ -11,26 +11,28 @@ import java.time.LocalDateTime;
  * @author JUAN DAVID
  */
 public class SolicitudDeMision {
+
+    private NotaDiplomatica notaContemplada;
     private String idSolicitud;
     private NivelUrgencia nivelUrgencia;
     private MateriaTratado materia;
     private String objetivo;
-    private LocalDateTime fechaInicio;
-    private LocalDateTime fechaFinal;
-    private boolean cumpleRequisitos;
-    
+    private String fechaInicio;
+    private String fechaFinal;
+
     public SolicitudDeMision() {
-        this.cumpleRequisitos = true;
+
     }
 
-    public SolicitudDeMision(String idSolicitud, NivelUrgencia nivelUrgencia, MateriaTratado materia, String objetivo, LocalDateTime fechaInicio, LocalDateTime fechaFinal) {
+    public SolicitudDeMision(String idSolicitud, NivelUrgencia nivelUrgencia, MateriaTratado materia, String objetivo, String fechaInicio, String fechaFinal, NotaDiplomatica notaContemplada) {
         this.idSolicitud = idSolicitud;
         this.nivelUrgencia = nivelUrgencia;
         this.materia = materia;
         this.objetivo = objetivo;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
-        this.cumpleRequisitos=true;
+        this.notaContemplada = notaContemplada;
+
     }
 
     public String getIdSolicitud() {
@@ -65,30 +67,28 @@ public class SolicitudDeMision {
         this.objetivo = objetivo;
     }
 
-    public LocalDateTime getFechaInicio() {
+    public String getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(LocalDateTime fechaInicio) {
+    public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public LocalDateTime getFechaFinal() {
+    public String getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setFechaFinal(LocalDateTime fechaFinal) {
+    public void setFechaFinal(String fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
 
-    public boolean isCumpleRequisitos() {
-        return cumpleRequisitos;
+    public NotaDiplomatica getNotaContemplada() {
+        return notaContemplada;
     }
 
-    public void setCumpleRequisitos(boolean cumpleRequisitos) {
-        this.cumpleRequisitos = cumpleRequisitos;
+    public void setNotaContemplada(NotaDiplomatica notaContemplada) {
+        this.notaContemplada = notaContemplada;
     }
-    
-    
-    
+
 }
