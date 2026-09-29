@@ -19,6 +19,7 @@ public class Expediente {
     private EstadoExpediente estadoActual;
     private boolean documentacionCompleta;
     private PaisSolicitante paisOrigen;
+    private String cosideraciones;
     private ArrayList<SolicitudDeMision> solicitudes;
 
     private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
@@ -86,6 +87,15 @@ public class Expediente {
     public void setSolicitudes(ArrayList<SolicitudDeMision> solicitudes) {
         this.solicitudes = solicitudes;
     }
+
+    public String getCosideraciones() {
+        return cosideraciones;
+    }
+
+    public void setCosideraciones(String cosideraciones) {
+        this.cosideraciones = cosideraciones;
+    }
+    
 
     public String anexarSolicitud(SolicitudDeMision solicitud) {
 

@@ -205,39 +205,24 @@ public class SistemaSolicitudes {
 
         return this.consejoDeEstado.emitirConceptoJuridico(exp, esFavorable, consideraciones);
     }
-    public String enviarExpedienteAConsejoDeEstado(String idExpediente)
-    {
-        return this.enviarExpedienteAConsejoDeEstado(idExpediente);
+
+    public String enviarExpedienteAConsejoDeEstado(String idExpediente) {
+        return this.cancilleria.enviarExpedienteAConsejoDeEstado(idExpediente, this.consejoDeEstado);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public String enviarExpedienteASenado(String idExpediente) {
+        Expediente expediente = this.consejoDeEstado.buscarExpedientePorId(idExpediente);
+        return this.consejoDeEstado.enviarExpedienteASenado(expediente, this.senado);
+    }
+
+    public String someterAVotacionSenado(String idExpediente, int aFavor, int enContra, int abstencion) {
+        Expediente exp = this.senado.buscarExpedientePorId(idExpediente);
+        if ((aFavor + enContra + abstencion) > this.senado.getTotalSenadores()) {
+            return "ERROR: LA CANTIDAD TOTAL DE VOTOS ES SUPERIOR A LA CANTIDAD DE SENADORES";
+        }
+        return this.senado.someterAVotacionExpediente(exp, aFavor, enContra, abstencion);
+    }
+
     public String procesarSentenciaYEjecutarRetiro(String idDemanda, boolean estimarDemanda) {
         // 1. El Consejo de Estado dicta la sentencia
         String resultadoFallo = this.consejoDeEstado.fallarDemandaNulidad(idDemanda, estimarDemanda);
@@ -266,4 +251,94 @@ public class SistemaSolicitudes {
 
     }
 
+    public ArrayList<String> obtenerExpedientesEnSenado() {
+        ArrayList<String> listaIds = new ArrayList<>();
+        ArrayList<Expediente> expedientes = this.senado.obtenerExpedientesPendientes();
+
+        if (expedientes != null) {
+            for (Expediente e : expedientes) {
+                if (e != null && e.getIdExpediente() != null) {
+                    listaIds.add(e.getIdExpediente());
+                }
+            }
+        }
+        return listaIds;
+    }
+
+    public String enviarExpedienteAPresidencia(String idExpediente) {
+        return this.senado.enviarExpedienteAPresidencia(idExpediente, this.presidenteActual);
+    }
+
+    public String enviarDecretoAMinDefensa(String numeroOficial) {
+        DecretoPresidencial decreto = this.presidenteActual.buscarDecretoPorNumero(numeroOficial);
+
+        if (decreto == null) {
+            return "ERROR: NO SE ENCONTRÓ NINGÚN BORRADOR CON EL NÚMERO (" + numeroOficial + ") EN PRESIDENCIA.";
+        }
+
+        return this.ministerioDeDefensa.recibirDecretoParaEstudio(decreto);
+    }
+
+    public String emitirDecisionMinDefensa(String numeroOficial, boolean aprobar) {
+        return this.ministerioDeDefensa.evaluarYDecidirDecreto(numeroOficial, aprobar);
+    }
+
+    public ArrayList<String> obtenerDecretosEnMinDefensa() {
+        ArrayList<String> ids = new ArrayList<>();
+        if (this.ministerioDeDefensa.getDecretosRecibidos() != null) {
+            for (DecretoPresidencial d : this.ministerioDeDefensa.getDecretosRecibidos()) {
+                if (d != null && !d.isRefrendadoPorDefensa() && !d.isRechazadoPorDefensa()) {
+                    ids.add(d.getNumeracionOficial());
+                }
+            }
+        }
+        return ids;
+    }
+
+    public ArrayList<String> obtenerBorradoresDecretosEnPresidencia() {
+        ArrayList<String> listaNumeros = new ArrayList<>();
+
+        if (this.presidenteActual != null && this.presidenteActual.getDecretosRedactados() != null) {
+            for (DecretoPresidencial d : this.presidenteActual.getDecretosRedactados()) {
+                if (d != null && d.getNumeracionOficial() != null) {
+                    listaNumeros.add(d.getNumeracionOficial());
+                }
+            }
+        }
+
+        return listaNumeros;
+    }
+
+    public ArrayList<String> obtenerExpedientesEnPresidencia() {
+        ArrayList<String> ids = new ArrayList<>();
+        if (this.presidenteActual.getExpedientesRecibidos() != null) {
+            for (Expediente e : this.presidenteActual.getExpedientesRecibidos()) {
+                if (e != null && e.getEstadoActual() == EstadoExpediente.AVALADO) {
+                    ids.add(e.getIdExpediente());
+                }
+            }
+        }
+        return ids;
+    }
+
+    public ArrayList<String> obtenerExpedientesAvaladosSenado() {
+        ArrayList<String> avalados = new ArrayList<>();
+
+        if (this.senado != null && this.senado.getExpedientesRecibidos() != null) {
+            for (Expediente exp : this.senado.getExpedientesRecibidos()) {
+                if (exp != null && exp.getEstadoActual() == EstadoExpediente.AVALADO) {
+                    avalados.add(exp.getIdExpediente());
+                }
+            }
+        }
+
+        return avalados;
+    }
+
+    public String crearDecretoPresidencial(String idExpediente, String numeracionOficial, int tiempoVigenciaDias, String consideraciones) {
+
+        Expediente exp = this.presidenteActual.buscarExpedientePorId(idExpediente);
+
+        return this.presidenteActual.crearDecreto(exp, numeracionOficial, tiempoVigenciaDias, consideraciones);
+    }
 }

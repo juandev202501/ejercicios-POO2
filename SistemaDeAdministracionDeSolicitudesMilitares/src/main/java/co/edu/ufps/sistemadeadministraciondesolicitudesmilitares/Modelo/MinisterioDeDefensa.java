@@ -15,15 +15,18 @@ public class MinisterioDeDefensa {
     private Ministro ministroTitular;
     private String sedeMinisterial;
     private ArrayList<BaseMilitar> basesMilitares;
+    private ArrayList<DecretoPresidencial> decretosRecibidos;
 
     public MinisterioDeDefensa() {
         this.basesMilitares = new ArrayList<>();
+        this.decretosRecibidos = new ArrayList<>();
     }
 
     public MinisterioDeDefensa(Ministro ministroTitular, String sedeMinisterial) {
         this.ministroTitular = ministroTitular;
         this.sedeMinisterial = sedeMinisterial;
         this.basesMilitares = new ArrayList<>();
+        this.decretosRecibidos = new ArrayList<>();
     }
 
     public Ministro getMinistroTitular() {
@@ -49,6 +52,15 @@ public class MinisterioDeDefensa {
     public void setBasesMilitares(ArrayList<BaseMilitar> basesMilitares) {
         this.basesMilitares = basesMilitares;
     }
+
+    public ArrayList<DecretoPresidencial> getDecretosRecibidos() {
+        return decretosRecibidos;
+    }
+
+    public void setDecretosRecibidos(ArrayList<DecretoPresidencial> decretosRecibidos) {
+        this.decretosRecibidos = decretosRecibidos;
+    }
+    
 
     public String refrendarDecreto(DecretoPresidencial decreto) {
         decreto.setRefrendadoPorDefensa(true);
@@ -94,5 +106,42 @@ public class MinisterioDeDefensa {
         }
 
         return reporte.toString();
+    }
+
+    public String recibirDecretoParaEstudio(DecretoPresidencial decreto) {
+        if (decreto == null) {
+            return "ERROR: EL DECRETO PROPORCIONADO ES NULO.";
+        }
+
+        for (DecretoPresidencial d : this.decretosRecibidos) {
+            if (d.getNumeracionOficial().equalsIgnoreCase(decreto.getNumeracionOficial())) {
+                return "ERROR: EL DECRETO " + decreto.getNumeracionOficial() + " YA FUE RECIBIDO EN EL MINISTERIO DE DEFENSA.";
+            }
+        }
+
+        this.decretosRecibidos.add(decreto);
+        return "DECRETO (N°" + decreto.getNumeracionOficial() + ") RECIBIDO EN EL MINISTERIO DE DEFENSA PARA EVALUACIÓN.";
+    }
+
+    public DecretoPresidencial buscarDecretoPorNumero(String numeroOficial) {
+        for (DecretoPresidencial d : this.decretosRecibidos) {
+            if (d.getNumeracionOficial().equalsIgnoreCase(numeroOficial)) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+    public String evaluarYDecidirDecreto(String numeroOficial, boolean aprobar) {
+        DecretoPresidencial decreto = buscarDecretoPorNumero(numeroOficial);
+
+        if (aprobar) {
+            decreto.setRefrendadoPorDefensa(true);
+            return "EL MINISTERIO DE DEFENSA HA EMITIDO DECISIÓN FAVORABLE Y REFRENDADO EL DECRETO (N°" + numeroOficial + ").";
+        } else {
+            decreto.setRefrendadoPorDefensa(false);
+            decreto.setRechazadoPorDefensa(true);
+            return "EL MINISTERIO DE DEFENSA HA DESCHAZADO/DESESTIMADO EL DECRETO (N°" + numeroOficial + "). NO SERÁ REFRENDADO.";
+        }
     }
 }

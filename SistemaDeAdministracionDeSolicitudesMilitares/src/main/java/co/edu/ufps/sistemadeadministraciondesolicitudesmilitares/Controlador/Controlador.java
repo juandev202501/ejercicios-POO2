@@ -118,16 +118,99 @@ public class Controlador {
         if (idExpediente.equalsIgnoreCase("SELECCIONAR")) {
             return "ERROR: DEBE SELECCIONAR UN EXPEDIENTE PARA EMITIR CONCEPTO JURÍDICO.";
         }
-
+        if (consideraciones.isBlank()) {
+            return "ERROR: DEBE DAR CONSIDERACIONES PARA EMITIR CONCEPTO JURÍDICO.";
+        }
         return this.sistemaSolicitudes.emitirConceptoJuridico(idExpediente, esFavorable, consideraciones);
     }
-    public String enviarExpedienteAConsejoDeEstado(String idExpediente)
-    {
-        if(idExpediente.equalsIgnoreCase("SELECCIONAR"))
-        {
+
+    public String enviarExpedienteAConsejoDeEstado(String idExpediente) {
+        if (idExpediente.equalsIgnoreCase("SELECCIONAR")) {
             return "ERROR: DEBE SELECCIONAR UN EXPEDIENTE PARA ENVIARLO AL CONSEJO";
         }
         return this.sistemaSolicitudes.enviarExpedienteAConsejoDeEstado(idExpediente);
-        
+
+    }
+
+    public String enviarExpedienteASenado(String idExpediente) {
+        if (idExpediente.equalsIgnoreCase("SELECCIONAR")) {
+            return "ERROR: DEBE SELECCIONAR UN EXPEDIENTE PARA ENVIAR AL SENADO.";
+        }
+        return this.sistemaSolicitudes.enviarExpedienteASenado(idExpediente);
+    }
+
+    public String someterAVotacionSenado(String idExpediente, int aFavor, int enContra, int abstencion) {
+
+        if (idExpediente.equalsIgnoreCase("SELECCIONAR")) {
+            return "ERROR: DEBE SELECCIONAR UN EXPEDIENTE PARA REGISTRAR LA VOTACIÓN.";
+        }
+
+        if (aFavor < 0 || enContra < 0 || abstencion < 0) {
+            return "ERROR: EL NÚMERO DE VOTOS NO PUEDE SER NEGATIVO.";
+        }
+
+        return this.sistemaSolicitudes.someterAVotacionSenado(idExpediente.trim(), aFavor, enContra, abstencion);
+
+    }
+
+    public ArrayList<String> obtenerExpedientesEnSenado() {
+        return this.sistemaSolicitudes.obtenerExpedientesEnSenado();
+    }
+
+    public String enviarExpedienteAPresidencia(String idExpediente) {
+        if (idExpediente.equalsIgnoreCase("SELECCIONAR")) {
+            return "ERROR: DEBE SELECCIONAR UN EXPEDIENTE AVALADO PARA REMITIR A PRESIDENCIA.";
+        }
+        return this.sistemaSolicitudes.enviarExpedienteAPresidencia(idExpediente);
+    }
+
+    public String crearDecretoPresidencial(String idExpediente, String numeracionOficial, int vigenciaDias, String consideraciones) {
+        if (idExpediente.equalsIgnoreCase("SELECCIONAR")) {
+            return "ERROR: DEBE SELECCIONAR UN EXPEDIENTE VÁLIDO EN PRESIDENCIA.";
+        }
+        if (numeracionOficial.isBlank()) {
+            return "ERROR: DEBE INGRESAR LA NUMERACIÓN OFICIAL DEL DECRETO.";
+        }
+
+        if (consideraciones.isBlank()) {
+            return "ERROR: DEBE INGRESAR LAS CONSIDERACIONES DEL DECRETO.";
+        }
+
+        if (vigenciaDias <= 0) {
+            return "ERROR: EL TIEMPO DE VIGENCIA EN DÍAS DEBE SER MAYOR A CERO.";
+        }
+
+        return this.sistemaSolicitudes.crearDecretoPresidencial(idExpediente, numeracionOficial, vigenciaDias, consideraciones);
+
+    }
+
+    public String enviarDecretoAMinDefensa(String numeroOficial) {
+        if (numeroOficial.equalsIgnoreCase("SELECCIONAR")) {
+            return "ERROR: DEBE SELECCIONAR UN DECRETO VÁLIDO PARA ENVIAR A MINDEFENSA.";
+        }
+        return this.sistemaSolicitudes.enviarDecretoAMinDefensa(numeroOficial);
+    }
+
+    public String emitirDecisionMinDefensa(String numeroOficial, boolean aprobar) {
+        if (numeroOficial.equalsIgnoreCase("SELECCIONAR")) {
+            return "ERROR: DEBE SELECCIONAR UN DECRETO PARA EMITIR DECISIÓN.";
+        }
+        return this.sistemaSolicitudes.emitirDecisionMinDefensa(numeroOficial.trim(), aprobar);
+    }
+
+    public ArrayList<String> obtenerDecretosEnMinDefensa() {
+        return this.sistemaSolicitudes.obtenerDecretosEnMinDefensa();
+    }
+
+    public ArrayList<String> obtenerBorradoresDecretosEnPresidencia() {
+        return this.sistemaSolicitudes.obtenerBorradoresDecretosEnPresidencia();
+    }
+
+    public ArrayList<String> obtenerExpedientesAvaladosSenado() {
+        return this.sistemaSolicitudes.obtenerExpedientesAvaladosSenado();
+    }
+
+    public ArrayList<String> obtenerExpedientesEnPresidencia() {
+        return this.sistemaSolicitudes.obtenerExpedientesEnPresidencia();
     }
 }

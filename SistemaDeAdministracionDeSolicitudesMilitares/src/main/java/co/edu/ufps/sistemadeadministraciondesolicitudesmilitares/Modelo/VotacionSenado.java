@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class VotacionSenado {
 
+    private Expediente expediente;
     private int votosAFavor;
     private int votosEnContra;
     private int abstenciones;
@@ -28,7 +29,8 @@ public class VotacionSenado {
 
     }
 
-    public VotacionSenado(int votosAFavor, int votosEnContra, int abstenciones, int totalSenadores) {
+    public VotacionSenado(Expediente expediente,int votosAFavor, int votosEnContra, int abstenciones, int totalSenadores) {
+        this.expediente=expediente;
         this.votosAFavor = votosAFavor;
         this.votosEnContra = votosEnContra;
         this.abstenciones = abstenciones;
@@ -84,6 +86,15 @@ public class VotacionSenado {
     public void setAprobadoParaPlenaria(boolean aprobadoParaPlenaria) {
         this.aprobadoParaPlenaria = aprobadoParaPlenaria;
     }
+
+    public Expediente getExpediente() {
+        return expediente;
+    }
+
+    public void setExpediente(Expediente expediente) {
+        this.expediente = expediente;
+    }
+    
 
     public void calcularResultadoVotacion(int totalSenadores) {
         int totalEmitidos = this.votosAFavor + this.votosEnContra + this.abstenciones;

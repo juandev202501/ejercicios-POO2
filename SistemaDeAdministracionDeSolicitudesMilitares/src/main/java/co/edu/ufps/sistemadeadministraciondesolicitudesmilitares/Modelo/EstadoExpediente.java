@@ -9,5 +9,5 @@ package co.edu.ufps.sistemadeadministraciondesolicitudesmilitares.Modelo;
  * @author JUAN DAVID
  */
 public enum EstadoExpediente {
-    RADICADO, EN_ESTUDIO, AVALADO, ARCHIVADO
+    RADICADO, EN_ESTUDIO, AVALADO, ARCHIVADO, SANCIONADO
 }

@@ -60,33 +60,37 @@ public class ConsejoDeEstado {
     public void setExpedientesRecibidos(ArrayList<Expediente> expedientesRecibidos) {
         this.expedientesRecibidos = expedientesRecibidos;
     }
-    
-    public String recibirExpediente(Expediente expediente)
-    {
+
+    public String recibirExpediente(Expediente expediente) {
         this.expedientesRecibidos.add(expediente);
-        return "EL CONSEJO DE ESTADO RECIBIO DE FORMA EXITOSA EL EXPEDIENTE (N°"+expediente.getIdExpediente()+")";
-        
+        return "EL CONSEJO DE ESTADO RECIBIO DE FORMA EXITOSA EL EXPEDIENTE (N°" + expediente.getIdExpediente() + ")";
+
     }
-    
+
     public String emitirConceptoJuridico(Expediente expediente, boolean esFavorable, String consideraciones) {
-        
+
         if (esFavorable) {
             expediente.setEstadoActual(EstadoExpediente.EN_ESTUDIO);
-            return "EL CONSEJO DE ESTADO EMITIÓ CONCEPTO JURÍDICO FAVORABLE PARA EL EXPEDIENTE: " + expediente.getIdExpediente() + ". CONSIDERACIONES: " + consideraciones;
+            return "EL CONSEJO DE ESTADO EMITIÓ CONCEPTO JURÍDICO FAVORABLE PARA EL EXPEDIENTE (N°" + expediente.getIdExpediente() + ") CONSIDERACIONES: " + consideraciones;
         } else {
             expediente.setEstadoActual(EstadoExpediente.ARCHIVADO);
-            return "EL CONSEJO DE ESTADO EMITIÓ CONCEPTO JURÍDICO DESFAVORABLE PARA EL EXPEDIENTE: " + expediente.getIdExpediente() + ". CONSIDERACIONES: " + consideraciones;
+            return "EL CONSEJO DE ESTADO EMITIÓ CONCEPTO JURÍDICO DESFAVORABLE PARA EL EXPEDIENTE (N°" + expediente.getIdExpediente() + ") CONSIDERACIONES: " + consideraciones;
         }
+    }
+
+    public String enviarExpedienteASenado(Expediente exp, Senado senado) {
+        Expediente expediente = exp;
+        return senado.recibirExpediente(exp);
     }
 
     public String radicarDemandaNulidad(DemandaNulidad demanda) {
         if (this.duplicado(demanda) != null) {
-            return "ERROR: YA EXISTE UNA DEMANDA DE NULIDAD RADICADA CON EL ID " + demanda.getIdDemanda();
+            return "ERROR: YA EXISTE UNA DEMANDA DE NULIDAD RADICADA CON EL ID (N°" + demanda.getIdDemanda()+")";
         }
 
         this.demandasRecibidas.add(demanda);
         demanda.setEstado(EstadoDemanda.RADICADA);
-        return "DEMANDA DE NULIDAD " + demanda.getIdDemanda() + " RADICADA CORRECTAMENTE ANTE EL CONSEJO DE ESTADO.";
+        return "DEMANDA DE NULIDAD (N°" + demanda.getIdDemanda() + ") RADICADA CORRECTAMENTE ANTE EL CONSEJO DE ESTADO.";
     }
 
     public DemandaNulidad duplicado(DemandaNulidad nueva) {
@@ -112,7 +116,19 @@ public class ConsejoDeEstado {
         DemandaNulidad demanda = this.buscar(idDemanda);
 
         demanda.setEstado(EstadoDemanda.ADMITIDA);
-        return "EL CONSEJO DE ESTADO HA ADMITIDO A TRAMITE LA DEMANDA DE NULIDAD " + idDemanda;
+        return "EL CONSEJO DE ESTADO HA ADMITIDO A TRAMITE LA DEMANDA DE NULIDAD (N°" + idDemanda+")";
+    }
+
+    public Expediente buscarExpedientePorId(String idExpediente) {
+        if (idExpediente == null) {
+            return null;
+        }
+        for (Expediente e : this.expedientesRecibidos) {
+            if (e != null && e.getIdExpediente().equalsIgnoreCase(idExpediente)) {
+                return e;
+            }
+        }
+        return null;
     }
 
     public String fallarDemandaNulidad(String idDemanda, boolean estimarDemanda) {

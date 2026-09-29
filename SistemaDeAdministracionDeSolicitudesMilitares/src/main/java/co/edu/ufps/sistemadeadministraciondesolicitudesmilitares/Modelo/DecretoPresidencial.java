@@ -15,23 +15,29 @@ public class DecretoPresidencial {
 
     private String numeracionOficial;
     private String fechaExpedicion;
+    private String cosideraciones;
     private int tiempoVigenciaDias;
     private Expediente expedienteAsociado;
     private boolean refrendadoPorDefensa;
+    private boolean rechazadoPorDefensa;
+    private boolean firmadoPorPresidente;
 
     private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy");
 
     public DecretoPresidencial() {
         this.fechaExpedicion = LocalDateTime.now().format(formato);
         this.refrendadoPorDefensa = false;
+        this.firmadoPorPresidente= false;
     }
 
-    public DecretoPresidencial(String numeracionOficial, int tiempoVigenciaDias, Expediente expedienteAsociado) {
+    public DecretoPresidencial(String numeracionOficial, int tiempoVigenciaDias,String consideraciones, Expediente expedienteAsociado) {
         this.numeracionOficial = numeracionOficial;
         this.tiempoVigenciaDias = tiempoVigenciaDias;
+        this.cosideraciones=consideraciones;
         this.expedienteAsociado = expedienteAsociado;
         this.fechaExpedicion = LocalDateTime.now().format(formato);
         this.refrendadoPorDefensa = false;
+        this.firmadoPorPresidente= false;
     }
 
     public String getNumeracionOficial() {
@@ -73,5 +79,30 @@ public class DecretoPresidencial {
     public void setRefrendadoPorDefensa(boolean refrendadoPorDefensa) {
         this.refrendadoPorDefensa = refrendadoPorDefensa;
     }
+
+    public String getCosideraciones() {
+        return cosideraciones;
+    }
+
+    public void setCosideraciones(String cosideraciones) {
+        this.cosideraciones = cosideraciones;
+    }
+
+    public boolean isFirmadoPorPresidente() {
+        return firmadoPorPresidente;
+    }
+
+    public void setFirmadoPorPresidente(boolean firmadoPorPresidente) {
+        this.firmadoPorPresidente = firmadoPorPresidente;
+    }
+
+    public boolean isRechazadoPorDefensa() {
+        return rechazadoPorDefensa;
+    }
+
+    public void setRechazadoPorDefensa(boolean rechazadoPorDefensa) {
+        this.rechazadoPorDefensa = rechazadoPorDefensa;
+    }
+    
 
 }
